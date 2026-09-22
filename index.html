@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microdosis para Victoria ✨🍣</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: #09040e;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 15px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fondo animado con pulso de luz (Mora ESTRELLA style) */
+    .bg-glow {
+      position: fixed;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(126, 34, 206, 0.15) 60%, transparent 80%);
+      filter: blur(70px);
+      z-index: 0;
+      pointer-events: none;
+      animation: ambientGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientGlow {
+      0% { transform: translateX(-50%) scale(0.9); opacity: 0.7; }
+      100% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+    }
+
+    /* Contenedor de partículas flotantes de fondo */
+    #particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 420px;
+      width: 100%;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Animación de entrada suave para las tarjetas */
+    .animated-card {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.4s; }
+    .delay-4 { animation-delay: 0.55s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header */
+    .header-card {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 24px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(126, 34, 206, 0.25);
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      animation: pulseBadge 2s infinite alternate;
+    }
+
+    @keyframes pulseBadge {
+      0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
+      100% { box-shadow: 0 0 15px 4px rgba(236, 72, 153, 0.6); }
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, #ffffff, #d8b4fe, #f472b6);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shineText 3s linear infinite;
+    }
+
+    @keyframes shineText {
+      to { background-position: 200% center; }
+    }
+
+    p.subtitle {
+      color: #c084fc;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    /* Medidor de Ostinación */
+    .meter-card {
+      background: rgba(20, 10, 35, 0.75);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .meter-title {
+      font-size: 0.85rem;
+      color: #e9d5ff;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ec4899, #a855f7, #3b82f6);
+      border-radius: 10px;
+      animation: fillBar 1.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards 0.5s, shimmer 2s infinite linear;
+      background-size: 200% 100%;
+    }
+
+    @keyframes fillBar {
+      to { width: 99.9%; }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+
+    /* Mora Quote Box */
+    .quote-card {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(236, 72, 153, 0.1));
+      border-left: 4px solid #a855f7;
+      border-radius: 16px;
+      padding: 16px;
+      font-style: italic;
+      color: #f3e8ff;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .quote-author {
+      font-style: normal;
+      font-weight: 800;
+      font-size: 0.75rem;
+      color: #a855f7;
+      margin-top: 8px;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    /* Cupón de Sushi Interactiva */
+    .coupon-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px dashed #a855f7;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .sushi-icon {
+      font-size: 3rem;
+      margin-bottom: 8px;
+      display: inline-block;
+      animation: floatSushi 3s ease-in-out infinite;
+    }
+
+    @keyframes floatSushi {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(8deg); }
+    }
+
+    .coupon-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #f472b6;
+      margin-bottom: 6px;
+    }
+
+    .coupon-desc {
+      font-size: 0.85rem;
+      color: #d8b4fe;
+      margin-bottom: 15px;
+    }
+
+    /* Botones con efectos */
+    .btn {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(236, 72, 153, 0.6);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      box-shadow: none;
+      margin-top: 10px;
+    }
+
+    /* Mensaje Secreto */
+    #secret-message {
+      display: none;
+      background: rgba(168, 85, 247, 0.25);
+      border: 1px solid #a855f7;
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      font-size: 0.92rem;
+      color: #f3e8ff;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #8b5cf6;
+      margin-top: 10px;
+    }
+
+    /* Partículas de JS */
+    .particle {
+      position: absolute;
+      pointer-events: none;
+      animation: floatUpParticle linear forwards;
+    }
+
+    @keyframes floatUpParticle {
+      0% { opacity: 0; transform: translateY(0) scale(0.5); }
+      20% { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-120px) scale(1.2); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+  <div id="particles-container"></div>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="header-card animated-card delay-1">
+      <span class="badge">MICRODOSIS ANTI-OSTINACIÓN 💊</span>
+      <h1>Para mi ESTRELLA sin luz 🌌</h1>
+      <p class="subtitle">Estar casi 8 horas sin luz en tu día libre es una falta de respeto... pero tú sigues siendo la más dura de todas. ✨</p>
+    </div>
+
+    <!-- Medidor -->
+    <div class="meter-card animated-card delay-2">
+      <div class="meter-title">
+        <span>Nivel de ostinación actual:</span>
+        <span style="color: #f472b6; font-weight:800;">99.9% ⚡</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Mora Quote Style -->
+    <div class="quote-card animated-card delay-3">
+      "Que se vaya la luz las horas que quiera, igual tú eres la que más brilla sin necesidad de corriente..." 🌌✨
+      <span class="quote-author">— MODO MORA / PARA TI 💜</span>
+    </div>
+
+    <!-- Cupón de Sushi -->
+    <div class="coupon-card animated-card delay-4">
+      <div class="sushi-icon">🍣🥢</div>
+      <div class="coupon-title">VALE OFICIAL POR SUSHI</div>
+      <div class="coupon-desc">Válido para una salida a comer rolls bien sabrosos para recompensar este día libre arruinado por el apagón.</div>
+      
+      <button class="btn" onclick="claimCoupon()">¡RECLAMAR MI SUSHI! 🍣</button>
+      <button class="btn btn-secondary" onclick="spawnExplosion()">Lluvia de luces y sushi ⚡</button>
+    </div>
+
+    <!-- Mensaje Secreto -->
+    <div id="secret-message">
+      🎉 <strong>¡CUPÓN RECLAMADO CON ÉXITO!</strong><br><br>
+      Queda oficialmente agendada la salida de sushi. Tú solo dime cuándo y te llevo a comer como te mereces para pasar el mal rato. Te quiero un mundo 💜✨
+    </div>
+
+    <div class="footer">
+      Hecho exclusivamente para ti • Edición Mora & Sushi 🍣
+    </div>
+
+  </div>
+
+  <script>
+    // Partículas de fondo flotando continuas (JavaScript)
+    const container = document.getElementById('particles-container');
+    const emojis = ['✨', '⭐', '💜', '🍣', '⚡'];
+
+    function createBackgroundParticle() {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      particle.style.left = Math.random() * 100 + 'vw';
+      particle.style.top = (Math.random() * 80 + 20) + 'vh';
+      particle.style.fontSize = (Math.random() * 12 + 10) + 'px';
+      
+      const duration = Math.random() * 3 + 2;
+      particle.style.animationDuration = duration + 's';
+
+      container.appendChild(particle);
+
+      setTimeout(() => {
+        particle.remove();
+      }, duration * 1000);
+    }
+
+    // Crea partículas suaves de fondo todo el tiempo
+    setInterval(createBackgroundParticle, 400);
+
+    // Acción al reclamar cupón
+    function claimCoupon() {
+      const msg = document.getElementById('secret-message');
+      msg.style.display = 'block';
+      msg.scrollIntoView({ behavior: 'smooth' });
+      spawnExplosion();
+    }
+
+    // Explosión masiva al interactuar con los botones
+    function spawnExplosion() {
+      for (let i = 0; i < 25; i++) {
+        setTimeout(() => {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          p.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+          p.style.left = (Math.random() * 80 + 10) + 'vw';
+          p.style.top = (window.scrollY + window.innerHeight - 200) + 'px';
+          p.style.fontSize = (Math.random() * 18 + 14) + 'px';
+          p.style.animationDuration = '1.8s';
+          
+          document.body.appendChild(p);
+          setTimeout(() => p.remove(), 1800);
+        }, i * 60);
+      }
+    }
+  </script>
+</body>
+</html>
