@@ -292,7 +292,7 @@
       margin-top: 10px;
     }
 
-    /* Partículas de JS */
+    /* Partículas flotantes normales */
     .particle {
       position: absolute;
       pointer-events: none;
@@ -303,6 +303,21 @@
       0% { opacity: 0; transform: translateY(0) scale(0.5); }
       20% { opacity: 0.8; }
       100% { opacity: 0; transform: translateY(-120px) scale(1.2); }
+    }
+
+    /* NUEVO: Partículas cayendo (Lluvia de tulipanes y bombillos) */
+    .particle-rain {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      animation: fallDownParticle linear forwards;
+    }
+
+    @keyframes fallDownParticle {
+      0% { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.8); }
+      10% { opacity: 1; transform: translateY(10vh) rotate(45deg) scale(1.1); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(110vh) rotate(360deg) scale(1); }
     }
   </style>
 </head>
@@ -316,7 +331,7 @@
     <!-- Header -->
     <div class="header-card animated-card delay-1">
       <span class="badge">MICRODOSIS ANTI-APAGÓN ⚡</span>
-      <h1>Para mi princesa sin luz 🖤</h1>
+      <h1>My Princess 2.0 🖤</h1>
       <p class="subtitle">Estar sin luz y sin agua es un fastidio... pero tú sigues siendo la más hermosa de todas. ✨</p>
     </div>
 
@@ -344,13 +359,13 @@
       <div class="coupon-desc">Válido por un cargamento de botellones de agua o para sacarte una sonrisa en pleno apagón.</div>
       
       <button class="btn" onclick="claimCoupon()">¡ABRIR MENSAJE ESPECIAL! 🖤</button>
-      <button class="btn btn-secondary" onclick="spawnExplosion()">Lluvia de tulipanes y luz 🌷⚡</button>
+      <button class="btn btn-secondary" onclick="spawnRain()">Lluvia de tulipanes y luz 🌷💡</button>
     </div>
 
     <!-- Mensaje Secreto -->
     <div id="secret-message">
-      Estuve esta hora dándole vueltas para ver qué poner en este msj, <strong>mi princesa</strong>... ¡y hasta consideré llevarte unos botellones de agua para que te bañes, jajaja! 😂<br><br>
-      Pero bueno, míralo por el lado bueno: tú seguro hueles a tulipanes igual con o sin baño 🌷🖤.<br><br>
+      Estuve esta hora y media dándole vueltas para ver qué poner en este msj xd, <strong>mi princesa</strong>... ¡y hasta consideré llevarte unos botellones de agua para que te bañes, jajaja! 😂<br><br>
+      Pero bueno, míralo por el lado bueno: tú seguro hueles a tulipanes igual con o sin baño 🌷🖤 (Obviamente se como huelen los tulipanes porque ya he estado contigo).<br><br>
       Ojalá te llegue rápido para que te quites ese fastidio de encima y te relajes el resto del día.
     </div>
 
@@ -361,14 +376,14 @@
   </div>
 
   <script>
-    // Partículas de fondo flotando continuas (JavaScript)
+    // Partículas de fondo flotando continuas
     const container = document.getElementById('particles-container');
-    const emojis = ['✨', '⭐', '🖤', '🌷', '⚡', '💧'];
+    const backgroundEmojis = ['✨', '⭐', '🖤', '🌷', '⚡', '💧'];
 
     function createBackgroundParticle() {
       const particle = document.createElement('div');
       particle.className = 'particle';
-      particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      particle.innerText = backgroundEmojis[Math.floor(Math.random() * backgroundEmojis.length)];
       particle.style.left = Math.random() * 100 + 'vw';
       particle.style.top = (Math.random() * 80 + 20) + 'vh';
       particle.style.fontSize = (Math.random() * 12 + 10) + 'px';
@@ -383,32 +398,45 @@
       }, duration * 1000);
     }
 
-    // Crea partículas suaves de fondo
+    // Crea partículas suaves de fondo todo el tiempo
     setInterval(createBackgroundParticle, 400);
 
-    // Acción al pulsar el botón
+    // Acción al pulsar el primer botón
     function claimCoupon() {
       const msg = document.getElementById('secret-message');
       msg.style.display = 'block';
       msg.scrollIntoView({ behavior: 'smooth' });
-      spawnExplosion();
+      spawnRain(); // Ahora también hace la lluvia al abrir el mensaje
     }
 
-    // Explosión masiva al interactuar con los botones
-    function spawnExplosion() {
-      for (let i = 0; i < 25; i++) {
+    // Lluvia masiva de tulipanes y bombillos cayendo desde arriba
+    function spawnRain() {
+      const rainEmojis = ['🌷', '💡', '⚡', '🌷']; // Más probabilidad de tulipanes
+      const amount = 150; // ¡Bastantes muchos más!
+
+      for (let i = 0; i < amount; i++) {
         setTimeout(() => {
           const p = document.createElement('div');
-          p.className = 'particle';
-          p.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-          p.style.left = (Math.random() * 80 + 10) + 'vw';
-          p.style.top = (window.scrollY + window.innerHeight - 200) + 'px';
-          p.style.fontSize = (Math.random() * 18 + 14) + 'px';
-          p.style.animationDuration = '1.8s';
+          p.className = 'particle-rain';
+          p.innerText = rainEmojis[Math.floor(Math.random() * rainEmojis.length)];
+          
+          // Distribuir en todo el ancho de la pantalla
+          p.style.left = (Math.random() * 100) + 'vw';
+          
+          // Iniciar fuera de la pantalla por la parte superior
+          p.style.top = '-50px'; 
+          
+          // Tamaños variados para dar profundidad
+          p.style.fontSize = (Math.random() * 25 + 15) + 'px';
+          
+          // Velocidad de caída aleatoria (entre 2 y 4.5 segundos)
+          p.style.animationDuration = (Math.random() * 2.5 + 2) + 's';
           
           document.body.appendChild(p);
-          setTimeout(() => p.remove(), 1800);
-        }, i * 60);
+          
+          // Limpiar el DOM después de que caigan
+          setTimeout(() => p.remove(), 5000);
+        }, i * 15); // Intervalo muy corto para que caigan en masa
       }
     }
   </script>
